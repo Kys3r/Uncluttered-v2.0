@@ -73,19 +73,12 @@ app.use(function(req, res, next) {
 app.use(session({
     cookie: { maxAge: 36000000, secure: process.env.NODE_ENV == "production" ? true : false },
 	store: process.env.NODE_ENV == "production" ? new MongoStore({url: 'mongodb://localhost:27017/token'}) : false,
-    // store: new MemoryStore({
-    //   checkPeriod: 86400000 // prune expired entries every 24h
-    // }),
-    secret: '42101confluence',
+    	secret: '42101confluence',
 	resave: false,
 	saveUninitialized: true
 }))
 app.use(Passport.initialize())
 app.use(Passport.session())
-// app.use('/public', express.static(__dirname + '/public'))
-
-// Route Use
-app.use('/', Index)
 
 // Route Oauth
 app.use('/oauth', OAuth)
@@ -93,17 +86,16 @@ app.use('/google-auth', GoogleAuth)
 app.use('/facebook-auth', FacebookAuth)
 app.use('/discord-auth', DiscordAuth)
 
-// Route Api
+// Route External Api
 app.use('/twitter-api', TwitterAPI)
 
 app.use(fileUpload({
 	limits: { fileSize: 10 * 1024 * 1024 }
 }))
 
-// Route form
+// Routes
+app.use('/', Index)
 app.use('/form', Form)
-
-// Route
 app.use('/users', Users)
 app.use('/maps', Maps)
 app.use('/leaderboard', Leaderboard)
@@ -124,16 +116,9 @@ app.use('/reports', Reports)
 app.use('/users-roles', UsersRoles)
 app.use('/mailing', Mailing)
 app.use('/times', Times)
-
-// Purchase
 app.use('/purchase/premium', PremiumPurchase)
-
-// Premium
 app.use('/premium/stats', PremiumStats)
-
-// Route bot
 app.use('/bot', Bot)
-
 
 app.get('/favicon.ico', (req, res) => res.status(204))
 
